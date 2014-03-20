@@ -44,7 +44,6 @@ Added 'exclude_post' argument<br />
 Added 'title_length' argument<br />
 The pagination was enchanced with native WordPress pagination.<br />
 Added argument for pagination: 'end_size', 'mid_size', 'prev', 'next', 'prev_next'<br />
-Tool Page was added to admin menu<br />
 This plugin was created by modifying the plugin 'Network Shared Posts' by Author: Code Ext which is located here: http://wordpress.org/plugins/network-shared-posts/
 
 == Upgrade Notice ==
