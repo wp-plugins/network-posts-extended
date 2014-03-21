@@ -5,7 +5,7 @@ Donate link: http://johncardell.com/plugins/network-posts-extended/
 Tags: network global posts, network posts, global posts, multisite posts, shared posts.
 Requires at least: 3.0
 Tested up to: 3.8.1
-Stable tag: 0.0.1
+Stable tag: 0.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,6 @@ Example: [netsposts include_blog='1,2,5' days='30' taxonomy='news' titles_only=f
 
 = What short code arguments can I use ? = 
 You can get the full list of short code arguments on plugin's web site http://www.johncardell.com/plugins/network-posts-extended/ 
-<br />
 
 == Changelog ==
 =0.0.1=
@@ -44,11 +43,15 @@ Added 'exclude_post' argument<br />
 Added 'title_length' argument<br />
 The pagination was enchanced with native WordPress pagination.<br />
 Added argument for pagination: 'end_size', 'mid_size', 'prev', 'next', 'prev_next'<br />
-This plugin was created by modifying the plugin 'Network Shared Posts' by Author: Code Ext which is located here: http://wordpress.org/plugins/network-shared-posts/
+Tool Page was added to admin menu<br />
+This plugin was created by modifying the plugin 'Network Shared Posts' by Author: Code Ext which is located here: http://wordpress.org/plugins/network-shared-posts/<br />
+=0.0.2=<br />
+Correct error in double read more link being displayed when 'auto_excerpt=true'.
+Changed default font in excerpt field from 'Arial Narrow' to Garamond.
 
 == Upgrade Notice ==
-= 0.0.1 =
-In this version you can use 'exclude_blog', 'include_post',exclude_post, and 'title_length' arguments. The pagination was enhanced with native WordPress pagination. The pages will count and be indexed as if using the <!--more--> tag. More features and styles will be available in future updates. This plugin as of now does not work with the column= argument but will be fixed in a future release. As of now it defaults to one column.
+= 0.0.2 =<br />
+Please upgrade to correct an error in the read more links being doubled.
 
 /* Network Posts Extended Shortcodes and Arguments */
 [netsposts include_blog='1,2,5' days=30 taxonomy=news titles_only=false show_author=true thumbnail=true size='90,90' image_class=alignleft auto_excerpt=true excerpt_length=500 show_author=true paginate=true list=5]

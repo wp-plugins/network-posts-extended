@@ -3,7 +3,7 @@
 Plugin Name: Network Posts Extended
 Plugin URI: http://www.johncardell.com/plugins/network-posts-extended/
 Description: Network Posts Extended plugin enables you to share posts over WP Multi Site network.  You can display on any blog in your network the posts selected by taxanomy from any blogs including main. 
-Version: 0.0.1
+Version: 0.0.2
 Author: John Cardell
 Author URI: http://www.johncardell.com
 
@@ -446,7 +446,9 @@ function get_excerpt($length,$content,$permalink)
 		$words = explode(' ', $content);
 		array_pop($words);
 		$content = implode(' ', $words);
-		return   $content.'... <a href="'.$permalink.'">   '.__('read more&rarr;','trans-nlp').'</a>';
+/* Original Code return   $content.'... <a href="'.$permalink.'">   '.__('read more&rarr;','trans-nlp').'</a>'; */
+/* Edited Code Turned argument 'read more&prarr;' to ''*/
+		return   $content.'... <a href="'.$permalink.'">   '.__('','trans-nlp').'</a>';
 	}
 }
 
