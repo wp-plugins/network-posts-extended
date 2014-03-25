@@ -28,7 +28,8 @@ Upload zip file through the plugins menu
 Note: For multisite installations only. Do not Network Activate. Activate it individually on each site.
 
 == Frequently Asked Questions ==
-Q) Should I network activate the plugin? A)<br />No.<br /><br />
+Q) Should I network activate the plugin?<br />
+A) No. Activate it individually on each blog.<br /><br />
 Q) May I only include an x amount of posts that I choose?<br />
 A) Yes, use include_post= and put in your posts in comma separated format surrounded by double quotes.<br />Example include_post="5,78,896".<br /><br />
 Q) My title is too long and looks ugly, anyway I can shorten it?<br />
@@ -38,8 +39,8 @@ A) You may shorten it using the argument title_length="10" will rounded it off t
 == Screenshots ==
 <ol>
 <li>Single Column Default</li>
-<li>Single Column with Blue Header</li>
-<li>Double Columne with Red Header</li>
+<li>Single Column with Blue Header and Thumbnail Dimmensions size="240,160"</li>
+<li>Double Column with Red Header</li>
 </ol>
 screenshot-1.png,screenshot-2.png,screenshot-3.png
 
