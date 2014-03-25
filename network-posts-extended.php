@@ -46,10 +46,19 @@ function ShortenText($text, $limit)
     return $text;
 
 }
+// Add settings link on plugin page
+function netsposts_plugin_settings_link($links) {
+    $settings_link = '<a href="tools.php?page=netsposts_toolpage">Settings</a>';
+    array_unshift($links, $settings_link);
+    return $links;
+}
+
+$plugin = plugin_basename(__FILE__);
+add_filter("plugin_action_links_$plugin", 'netsposts_plugin_settings_link' );
 
 function add_netsposts_toolpage()
 {
-	add_management_page( 'Network Shared Posts Tool', 'Network Shared Posts Tool', 'Administrator', 'netsposts_toolpage', 'netsposts_tool_page' );
+	add_management_page( 'Network Shared Posts Extended Tool', 'Network Shared Posts Extended Tool', 'Administrator', 'netsposts_toolpage', 'netsposts_tool_page' );
 }
 
 function net_shared_posts_init()
@@ -99,6 +108,17 @@ function netsposts_shortcode($atts)
 	'prev' => '&laquo; Previous',
 	'next' =>  'Next &raquo;',
 	'column' => '1',
+    'column_width' => '200',
+    'title_color' => '',
+    'text_color' => '',
+    'meta_info' => 'true',
+    'wrap_title_start' => '',
+    'wrap_title_end' => '',
+    'wrap_image_start' => '',
+    'wrap_image_end' => '',
+    'wrap_text_start' => '',
+    'wrap_text_end' => '',
+    'meta_width' => '100%',
 	'menu_name' => '',
 	'menu_class' => '',
 	'container_class' => ''
@@ -284,11 +304,12 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 	<style type="text/css">
 	h2.pagetitle
 	{
-<?php echo  $page_title_style; ?>
+        <?php echo  $page_title_style; ?>
+        <?php echo get_option('net-style'); ?>
 	}
 	</style>
 	<?
-	} 
+	}
 	$html = '<div id="netsposts-menu">';
 	if($menu_name)
 	{
@@ -298,11 +319,17 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 	$html .= '</div>';
 	if($postdata)
 	{
-		echo '<div id="block-wrapper">';
-		if($title) echo '<span class="netsposts-title">'.$title.'</span><br />';
+        $html .= "<style>";
+        $html .= get_option('net-style');
+        $html .= "</style>";
+
+        $html .= '<div id="block-wrapper">';
+		if($title) $html .= '<span class="netsposts-title">'.$title.'</span><br />';
+
 		foreach($colomn_data as  $data)
 		{
-			if($column > 1) echo '<div class ="netsposts-column" style="width:'.$col_width.'">';
+
+			if($column > 1) $html .= '<div class ="netsposts-column" style="width: '.$column_width.'px;">';
 
 			foreach($data as $key => $the_post)
 			{
@@ -315,24 +342,32 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
                          $blog_name = $blog_details->blogname;
                          $blog_url = $blog_details->siteurl;
                          if($titles_only) $title_class = 'netsposts-post-titles-only'; else $title_class = 'netsposts-posttitle';
-                         $html .= html_entity_decode($wrap_start).'<div class="netsposts-content"><span class="'.$title_class.'"><a href="'.$title_length.''.$the_post['guid'].'">'.ShortenText($the_post['post_title'],$title_length).'</a></span>';
+                         $html .= html_entity_decode($wrap_start).'<div class="netsposts-content">';
+                         $html .= htmlspecialchars_decode($wrap_title_start);
+                         $html .= '<span class="'.$title_class.'" style="color: '.$title_color.';">'.ShortenText($the_post['post_title'],$title_length).'</span>';
+                         $html .= htmlspecialchars_decode($wrap_title_end);
 
                          if(!$titles_only)
                          {
                              $date = new DateTime(trim($the_post['post_date']));
                              $date_post = $date->format($date_format);
-                             $html .= '<span class="netsposts-source"> '.__('Published','netsposts').' '.$date_post.' '.__('in','netsposts').'  <a href="'.$blog_url.'">'.$blog_name.'</a>';
+                             if($meta_info != "false"){
+                                $html .= '<span class="netsposts-source"> '.__('Published','netsposts').' '.$date_post.' '.__('in','netsposts').'  <a href="'.$blog_url.'">'.$blog_name.'</a>';
+                             }
                              ##  Full metadata
                              if( $show_author)
                              {
-                                 if($column > 1) echo '<br />';
+                                 if($column > 1) $html .= '<br />';
                                  $html .= ' ' . __('Author','netsposts'). ' ' . '<a href="'.$blog_url .'?author='.  $the_post['post_author'] .'">'. get_the_author_meta( 'display_name' , $the_post['post_author'] ) . ' </a>';
                              }
                              $html .= '</span>';
                              if($thumbnail)
                              {
-
-                                 $html .= '<a href="'.$the_post['guid'].'">'.get_thumbnail_by_blog($the_post['blog_id'],$the_post['ID'],$size, $image_class).'</a><p class="netsposts-excerpt">';
+                                 $html .= htmlspecialchars_decode($wrap_image_start);
+                                 $html .= '<a href="'.$the_post['guid'].'">'.get_thumbnail_by_blog($the_post['blog_id'],$the_post['ID'],$size, $image_class, $column).'</a>';
+                                 $html .= htmlspecialchars_decode($wrap_image_end);
+                                 $html .= '<p class="netsposts-excerpt" style="color: '.$text_color.';">';
+                                 $html .= htmlspecialchars_decode($wrap_text_start);
                                  $the_post['post_content'] = preg_replace("/<img[^>]+\>/i", "", $the_post['post_content']);
                              }
 
@@ -340,40 +375,56 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
                              else $exerpt  = $the_post['post_excerpt'];
                              if($full_text) $text = $the_post['post_content']; else $text = $exerpt;
                              $html .= strip_shortcodes( $text);
-                             $html .= ' <a href="'.$the_post['guid'].'">read more→</a></p>';
+                             $html .= htmlspecialchars_decode($wrap_text_end);
+                            // $html .= ' <a href="'.$the_post['guid'].'">read more?</a></p>';
                          }
-                         $html .= '</div>';
+
                          $html .= "<br />";
 
                          $html .= html_entity_decode($wrap_end);
 
-                         if($column > 1) echo '</div>';
                      }
 
                  }else{
-                   // if(!in_array($the_post['ID'], $exclude_post2)){
+
                         $blog_details = get_blog_details( $the_post['blog_id']);
                               $blog_name = $blog_details->blogname;
                               $blog_url = $blog_details->siteurl;
+
                         if($titles_only) $title_class = 'netsposts-post-titles-only'; else $title_class = 'netsposts-posttitle';
-                        $html .= html_entity_decode($wrap_start).'<div class="netsposts-content"><span class="'.$title_class.'"><a href="'.$the_post['guid'].'">'.ShortenText($the_post['post_title'],$title_length).'</a></span>';
+                        $html .= html_entity_decode($wrap_start).'<div class="netsposts-content">';
+                        $html .= htmlspecialchars_decode($wrap_title_start);
+                        $html .= '<span class="'.$title_class.'" style="color: '.$title_color.';">'.ShortenText($the_post['post_title'],$title_length).'</span>';
+                        $html .= htmlspecialchars_decode($wrap_title_end);
 
                         if(!$titles_only)
                         {
                             $date = new DateTime(trim($the_post['post_date']));
                             $date_post = $date->format($date_format);
-                            $html .= '<span class="netsposts-source"> '.__('Published','netsposts').' '.$date_post.' '.__('in','netsposts').'  <a href="'.$blog_url.'">'.$blog_name.'</a>';
+                            if($meta_info != "false"){
+
+                                if($meta_width == "100%"){
+                                    $width = 'width: 100%;';
+                                }else{
+                                    $width = "width: ".$meta_width."px;";
+                                }
+
+                                $html .= '<span class="netsposts-source" style="height: 24px; margin-bottom: 5px; overflow: hidden; '.$width.'"> '.__('Published','netsposts').' '.$date_post.' '.__('in','netsposts').'  <a href="'.$blog_url.'">'.$blog_name.'</a>';
+                            }
                             ##  Full metadata
                             if( $show_author)
                             {
-                            if($column > 1) echo '<br />';
+                            if($column > 1) $html .= '<br />';
                                 $html .= ' ' . __('Author','netsposts'). ' ' . '<a href="'.$blog_url .'?author='.  $the_post['post_author'] .'">'. get_the_author_meta( 'display_name' , $the_post['post_author'] ) . ' </a>';
                             }
                             $html .= '</span>';
                             if($thumbnail)
                             {
-
-                                $html .= '<a href="'.$the_post['guid'].'">'.get_thumbnail_by_blog($the_post['blog_id'],$the_post['ID'],$size, $image_class).'</a><p class="netsposts-excerpt">';
+                                $html .= htmlspecialchars_decode($wrap_image_start);
+                                $html .= '<a href="'.$the_post['guid'].'">'.get_thumbnail_by_blog($the_post['blog_id'],$the_post['ID'],$size, $image_class, $column).'</a>';
+                                $html .= htmlspecialchars_decode($wrap_image_end);
+                                $html .= htmlspecialchars_decode($wrap_text_start);
+                                $html .= '<p class="netsposts-excerpt" style="color: '.$text_color.';">';
                             $the_post['post_content'] = preg_replace("/<img[^>]+\>/i", "", $the_post['post_content']);
                             }
 
@@ -381,18 +432,21 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
                             else $exerpt  = $the_post['post_excerpt'];
                             if($full_text) $text = $the_post['post_content']; else $text = $exerpt;
                             $html .= strip_shortcodes( $text);
-                            $html .= ' <a href="'.$the_post['guid'].'">read more→</a></p>';
+                            $html .= ' <a href="'.$the_post['guid'].'">read more?</a></p>';
+                            $html .= htmlspecialchars_decode($wrap_text_end);
                         }
-                        $html .= '</div>';
+
+                        $html .= "</div>";
                         $html .= "<br />";
 
                         $html .= html_entity_decode($wrap_end);
 
-                        if($column > 1) echo '</div>';
-
-                 //   }
                  }
+
+                 $html .= "<div style='clear: both;'></div>";
+
             }
+            if($column > 1) $html .= '</div>';
 		}
         $html .= '<div class="clear"></div>';
 		if(($paginate) and ($total_pages>1))
@@ -411,7 +465,7 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 ) );
 
             $html .= '</div>';
-			
+
 		}
         $html .= '</div>';
 	}
@@ -420,7 +474,7 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 }
 ##########################################################
 
-function get_thumbnail_by_blog($blog_id=NULL,$post_id=NULL,$size='thumbnail',$image_class)
+function get_thumbnail_by_blog($blog_id=NULL,$post_id=NULL,$size='thumbnail',$image_class, $column)
 {
 	if( !$blog_id  or !$post_id ) return;
 	switch_to_blog($blog_id);
@@ -430,7 +484,10 @@ function get_thumbnail_by_blog($blog_id=NULL,$post_id=NULL,$size='thumbnail',$im
 		restore_current_blog(); return FALSE;
 	}
 	$blogdetails = get_blog_details( $blog_id );
-	$size=explode(',',$size); 
+	$size=explode(',',$size);
+    if($column > 1){
+        $image_class = $image_class." more-column";
+    }
 	$attrs = array('class'=> $image_class);
 	$thumbcode = str_replace( $current_blog->domain . $current_blog->path, $blogdetails->domain . $blogdetails->path, get_the_post_thumbnail( $post_id, $size, $attrs ) );
 	restore_current_blog();
@@ -446,8 +503,9 @@ function get_excerpt($length,$content,$permalink)
 		$words = explode(' ', $content);
 		array_pop($words);
 		$content = implode(' ', $words);
+
 /* Original Code return   $content.'... <a href="'.$permalink.'">   '.__('read more&rarr;','trans-nlp').'</a>'; */
-/* Edited Code Turned argument 'read more&prarr;' to ''*/
+/* Edited Code Turned argument 'read more&rarr;' to ''*/
 		return   $content.'... <a href="'.$permalink.'">   '.__('','trans-nlp').'</a>';
 	}
 }
@@ -461,137 +519,42 @@ function custom_sort($a,$b)
 
 function netsposts_tool_page()
 {
-	global $wpdb;
-	$short_code = '[netsposts ';
-	if (isset($_POST['blogs_selectbox']))
-	{ 
-	$value = (string)$_POST["radiogroup"];
-	$short_code .= $value.'=\''. implode(',', $_POST['blogs_selectbox'])."'";
-	} 
-	
-	if (isset($_POST['terms_selectbox']))	{ $short_code .= ' taxonomy=\''. implode(',', $_POST['terms_selectbox'])."'"; 	} 
-	if (isset($_POST['days'])  and ($_POST['days']))	{ $short_code .= " days=". $_POST['days'];	} 
-	if (isset($_POST['titles_only'])) { $short_code .= " titles_only=". $_POST['titles_only']; } 
-	if (isset($_POST['show_author'])) { $short_code .= " show_author=". $_POST['show_author'];} 
-	if (isset($_POST['post_type'])  and ($_POST['post_type']))	{ $short_code .= " post_type='". $_POST['post_type']."'";	} 
-	if (isset($_POST['wrap_start'])  and ($_POST['wrap_start']))	{ $short_code .= " wrap_start='". $_POST['wrap_start']."'";	} 
-	if (isset($_POST['wrap_end'])  and ($_POST['wrap_end']))	{ $short_code .= " wrap_end='". $_POST['wrap_end']."'";	} 	
-	if (isset($_POST['full_text'])) { $short_code .= " full_text=". $_POST['full_text'];	} 
-	if (isset($_POST['page_title_style'])  and ($_POST['page_title_style']))	{ $short_code .= " page_title_style='". $_POST['page_title_style']."'";	} 	
-	if (isset($_POST['title'])  and ($_POST['title']))	{ $short_code .= " title='". $_POST['title']."'";	} 	
-	if (isset($_POST['column'])  and ($_POST['column']))	{ $short_code .= " column='". $_POST['column']."'";	} 
-	if (isset($_POST['menu_name'])  and ($_POST['menu_name']))	{ $short_code .= " menu_name='". $_POST['menu_name']."'";	} 		
-	if (isset($_POST['menu_class'])  and ($_POST['menu_class']))	{ $short_code .= " menu_class='". $_POST['menu_class']."'";	} 		
-	if (isset($_POST['container_class'])  and ($_POST['container_class']))	{ $short_code .= " container_class='". $_POST['container_class']."'";	} 		
-	if (isset($_POST['date_format'])  and ($_POST['date_format']))	{ $short_code .= " date_format='". $_POST['date_format']."'";	} 	
-	
-	if (isset($_POST['auto_excerpt'])) { $short_code .= " auto_excerpt=". $_POST['auto_excerpt'];	} 
-if (isset($_POST['excerpt_length'])  and ($_POST['excerpt_length']))	{ $short_code .= " excerpt_length=". $_POST['excerpt_length'];	} 
-	
-	if (isset($_POST['thumbnail'])) { $short_code .= " thumbnail=". $_POST['thumbnail'];	} 
-	if (isset($_POST['size']) and ($_POST['size'][0]) and ($_POST['size'][1]))	{ $short_code .= " size=". implode(',', $_POST['size']); 	} 
-	if (isset($_POST['image_class'])  and ($_POST['image_class']))	{ $short_code .= " image_class='". $_POST['image_class']."'";	} 
-	
-	
-	if (isset($_POST['paginate'])) { $short_code .= " paginate=". $_POST['paginate'];	} 
-	if (isset($_POST['list'])  and ($_POST['list']))	{ $short_code .= " list=". $_POST['list'];	} 
-	if (isset($_POST['end_size'])  and ($_POST['end_size']))	{ $short_code .= " end_size='". $_POST['end_size']."'";	} 
-	if (isset($_POST['mid_size'])  and ($_POST['mid_size']))	{ $short_code .= " mid_size='". $_POST['mid_size']."'";	} 
-	if (isset($_POST['prev'])  and ($_POST['prev']))	{ $short_code .= " prev='". $_POST['prev']."'";	} 
-	if (isset($_POST['next'])  and ($_POST['next']))	{ $short_code .= " next='". $_POST['next']."'";	} 
-	if (isset($_POST['prev_next'])) { $short_code .= " prev_next=". $_POST['prev_next'];	} 
-	
-	
-		
-$short_code .= ']';
 ?>
-
 <div class="wrap">
-<div id="icon-users" class="icon32"><br /></div>
-<h2>Network Shared Posts Ext Short Code Tool</h2>
-<hr />
-<div style="display:inline-block; ">
-<div style ="display:inline-block; padding:15px; float:left;">
-<font color=red><?php //if($status) echo "" . $status . ""; ?></font>
-<form method="post" action="#">
-<input type="radio" name="radiogroup" value="include_blog"  <?php if($_POST["radiogroup"] == "include_blog") echo ' checked '; ?>/>&nbsp;include
-<input type="radio" name="radiogroup" value="exclude_blog"<?php if($_POST["radiogroup"] == "exclude_blog") echo ' checked '; ?> />&nbsp;exclude
-<br />
-<label>Sites</label><br />
-<select MULTIPLE name="blogs_selectbox[]" >
-<?php 
-$BlogsTable = $wpdb->base_prefix.'blogs';
-$blogs = $wpdb->get_results($wpdb->prepare(" select  blog_id  from $BlogsTable  "), ARRAY_A); 
-$termsdata = array();
-foreach($blogs as $val)
-{
-       if($val['blog_id'] == 1) { $OptionsTable = $wpdb->base_prefix.'options';   $TermsTable = $wpdb->base_prefix.'terms';  }
-             else {$OptionsTable = $wpdb->base_prefix.$val['blog_id'] .'_options'; 	$TermsTable = $wpdb->base_prefix.$val['blog_id'] .'_terms';  
-	}
-          $blog_name  = $wpdb->get_var($wpdb->prepare(" select  option_value  from $OptionsTable  where option_name = 'blogname' ")); 
-	echo '<option  value="'.$val['blog_id'].'"';
-	if (isset($_POST['blogs_selectbox'])) {  if(in_array ($val['blog_id'], $_POST['blogs_selectbox'])) echo ' selected '; }
-	echo '  >'.$blog_name.'</option>';
-	 $terms = $wpdb->get_results($wpdb->prepare(" select  name, slug from $TermsTable  "), ARRAY_A); 
-	$termsdata = array_merge_recursive($termsdata, $terms);
-}
-?>
-</select><br />
-<label>Taconomy (categories and tags)</label><br />
-<?  //var_dump($termsdata)   ?>
-<select MULTIPLE name="terms_selectbox[]" >
-<?// echo '<br />';
-foreach($termsdata as $val)
-{
-	echo '<option  value="'.$val['slug'].'"';
-	if (isset($_POST['terms_selectbox']))	{ if(in_array ($val['slug'], $_POST['terms_selectbox'])) echo ' selected ';	}
-	echo ' >'.$val['name'].'</option>';
-	
-}
+    <div id="icon-users" class="icon32"><br /></div>
+    <h2>Network Posts Extended help</h2>
+    <hr />
+    If you like this plugin please donate:
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_donations">
+        <input type="hidden" name="business" value="john@johncardell.com">
+        <input type="hidden" name="lc" value="US">
+        <input type="hidden" name="item_name" value="Network Shared Posts">
+        <input type="hidden" name="no_note" value="0">
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHostedGuest">
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+    </form>
 
- ?>
-</select><br />
-<label>CSS style for page title</label><input  type="text" name="page_title_style" value="<?php echo $_POST['page_title_style'] ?>"/><br />
-<label>Title</label><input  type="text" name="title"  value="<?php echo $_POST['title'] ?>"/><br />
-<label>Hpw many columns</label><input  type="text" name="column"  value="<?php echo $_POST['column'] ?>"/><br />
-<label>Name of a menu</label><input  type="text" name="menu_name"  value="<?php echo $_POST['menu_name'] ?>"/><br />
-<label>Menu CSS class</label><input  type="text" name="menu_class"  value="<?php echo $_POST['menu_class'] ?>"/><br />
-<label>Menu container CSS class</label><input  type="text" name="container_class"  value="<?php echo $_POST['container_class'] ?>"/><br />
+    </br></br>
 
-<label>Days (how old posts may be)</label><input  type="text" name="days"  value="<?php echo $_POST['days'] ?>"/><br />
-<input type="checkbox" name="titles_only" value="true" <?php if($_POST['titles_only'] == true) echo ' checked '; ?>/><label>&nbsp;Titles only</label><br />
-<input type="checkbox" name="show_author" value="true" <?php if($_POST['show_author'] == true) echo ' checked '; ?>/><label>&nbsp;Show author</label><br />
-<label>Type of posts:</label><input  type="text" name="post_type"  value="<?php echo $_POST['post_type'] ?>"/><br />
-<input type="checkbox" name="full_text" value="true"  <?php if($_POST['full_text'] == true) echo ' checked '; ?>/><label>&nbsp;Full text instead of excerpt</label><br />
-<label>Format of the post date:</label><input  type="text" name="date_format"  value="<?php echo $_POST['date_format'] ?>"/><br />
-<label>Wrap start:</label><input  type="text" name="wrap_start"   value="<?php echo $_POST['wrap_start'] ?>"/>&nbsp;<label>Wrap end:</label><input  type="text" name="wrap_end"   value="<?php echo $_POST['wrap_end'] ?>"/><br />
+    <?php
+     echo "Here is the link: For a complete tutorial please visit: <br> <a target='ejecsingle' href='http://www.johncardell.com/plugins/network-posts-extended/'>http://www.johncardell.com/plugins/network-posts-extended/</a>";
+    ?>
+    </br></br>
+    <form method="post" action="options.php">
+        <?php wp_nonce_field('update-options'); ?>
+        <?php $styling  = get_option('net-style'); ?>
+        Add extra css styling: <?php echo "Here is a good source for custom css styling: <a target='ejejcsingle' href='http://www.w3schools.com/css/css_id_class.asp'>w3schools class tutorial</a>"; ?></br>
+        <textarea style="width: 500px; height: 500px;" name="net-style" ><?php echo $styling; ?></textarea>
+        </br>
+        <input type="hidden" name="action" value="update" />
+        <input type="hidden" name="page_options" value="net-style" />
+        <input type="submit" value="Save Changes" />
+    </form>
 
-
-<input type="checkbox" name="auto_excerpt" value="false"  <?php if($_POST['auto_excerpt'] == 'false') echo ' checked '; ?>/><label>&nbsp;No auto excerpts</label><br />
-<label>Length of excerpt</label><input  type="text" name="excerpt_length"  value="<?php echo $_POST['excerpt_length'] ?>"/><br />
-
-<input type="checkbox" name="thumbnail" value="true"  <?php if($_POST['thumbnail'] == true) echo ' checked '; ?>/><label>&nbsp;Show thumbnails</label><br />
-<label>Size of thumbnails (pixeks) </label> <br /><label>Width:</label><input  type="text" name="size[0]"   value="<?php echo $_POST['size'][0] ?>"/><label>&nbsp;Height:</label><input  type="text" name="size[1]"   value="<?php echo $_POST['size'][1] ?>"/><br />
-<label>Name of CSS class thumbnails</label><input  type="text" name="image_class"   value="<?php echo $_POST['image_class'] ?>"/><br />
-
-<input type="checkbox" name="paginate" value="true"  <?php if($_POST['paginate'] == true) echo ' checked '; ?>/><label>&nbsp;Paginate</label><br />
-<label>How many posts per page:</label><input  type="text" name="list"    value="<?php echo $_POST['list'] ?>"/><br />
-<label>How many numbers on either the start and the end list edges:</label><br />
-<input  type="text" name="end_size"   value="<?php echo $_POST['end_size'] ?>"/><br />
-<label>How many numbers to either side of current page:</label><br />
-<input  type="text" name="mid_size"   value="<?php echo $_POST['mid_size'] ?>"/><br />
-<input type="checkbox" name="prev_next" value="false"  <?php if($_POST['prev_next'] == 'false') echo ' checked '; ?>/><label>&nbsp;Do not include the previous and next links</label><br />
-<label>The previous page link text:</label><input  type="text" name="prev"   value="<?php echo $_POST['prev'] ?>"/><br />
-<label>The next page text:</label><input  type="text" name="next"  value="<?php echo $_POST['next'] ?>"/><br /><br />
-
-<input type="submit" value="Get Short Code" style="color:#fff; background-color:#888; padding:10px; cursor:pointer;" />
-</form>
 </div>
-<div style ="background-color:#eee; display:inline-block; padding:15px;float:right;">
-<p><strong>Short Code</strong></p>
-<textarea name="short_code" rows="10" cols="40" id="main"><?php  echo $short_code  ?></textarea><br />
-	</div>
-	</div></div>
 <?php
 
 }
