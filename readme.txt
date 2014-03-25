@@ -28,31 +28,33 @@ Upload zip file through the plugins menu
 Note: For multisite installations only. Do not Network Activate. Activate it individually on each site.
 
 == Frequently Asked Questions ==
-Q) Should I network activate the plugin?A) No.
-Q) May I only include an x amount of posts that I choose?
-A) Yes, use include_post= and put in your posts in comma separated format surrounded by double quotes. Example include_post="5,78,896".
-Q) My title is too long and looks ugly, anyway I can shorten it?
-A) You may shorten it using the argument title_length="10" will rounded it off to the last complete word before it reaches 10 characters.
+Q) Should I network activate the plugin? A)<br />No.<br /><br />
+Q) May I only include an x amount of posts that I choose?<br />
+A) Yes, use include_post= and put in your posts in comma separated format surrounded by double quotes.<br />Example include_post="5,78,896".<br /><br />
+Q) My title is too long and looks ugly, anyway I can shorten it?<br />
+A) You may shorten it using the argument title_length="10" will rounded it off to the last complete word before it reaches 10 characters.<br /><br />
 
 
 == Screenshots ==
-1. Single Column
-2. Double Column 
-3. Double Column with Custom Class
+<ol>
+<li>Single Column Default</li>
+<li>Single Column with Blue Header</li>
+<li>Double Columne with Red Header</li>
+</ol>
+screenshot-1.png,screenshot-2.png,screenshot-3.png
 
 == Changelog ==
-Added the function to be able to use your own custom classes in tools area.
-
-Plus added the following arguments:
-column_width (default (px): 200)
-title_color (default: black)
-text_color - color of text. Examples text_color="red" or text_color="#ff0000". Both will have the texts color turn red.
-meta_info - Default true
-wrap_title_start,wrap_title_end - wrap_image_start,wrap_image_end - wrap_text_start,wrap_text_end.
-meta_width - Same as title length except in percentage to shorten long meta data.
+Added the function to be able to use your own custom classes in tools area.<br />
+Plus added the following arguments:<br />
+column_width (default (px): 200)<br />
+title_color (default: black)<br />
+text_color - color of text. Examples text_color="red" or text_color="#ff0000". Both will have the texts color turn red.<br />
+meta_info - Default true<br />
+wrap_title_start,wrap_title_end - wrap_image_start,wrap_image_end - wrap_text_start,wrap_text_end.<br />
+meta_width - Same as title length except in percentage to shorten long meta data.<br />
 
 == Upgrade Notice ==
-To added latest features and minor bug fixes. Plus ability to add custom css styling in plugins tool page. May now create this custom class: .example { color: #000; float:left; }
+To added latest features and minor bug fixes.<br />Plus ability to add custom css styling in plugins tool page.<br />May now create this custom class: .example { color: #000; float:left; }
 
 == List of Arguments ==
 /* Network Posts Extended Shortcodes and Arguments */
