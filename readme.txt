@@ -1,5 +1,5 @@
 === Network Posts Extended ===
-Contributors: John Cardell, DJManas
+Contributors: johnzenausa, DJManas
 Tags: network global posts, network posts, global posts, multisite posts, shared posts, network posts extended
 Donate link: http://johncardell.com/plugins/network-posts-extended/
 Requires at least: 3.0
