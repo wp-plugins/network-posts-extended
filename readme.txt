@@ -81,7 +81,7 @@ list – how many posts per page (default 10)<br />
 post_type – type of posts (default post)<br />
 full_text - full text instead of excerpt (default false)<br />
 date_format – format of the post date (default n/j/Y)<br />
-wrap_start, wrap_end - you can wrap the posts for example: (wrap_start=&#34;&lt;div style=&#39;font-weight:bold;vertical-align:middle;&#39; class=&#39;myclass&#39;&gt;&#34; wrap_end=#34;&lt;/div&gt;#34;)
+wrap_start, wrap_end - you can wrap the posts for example: (wrap_start="&lt;div style='font-weight:bold;vertical-align:middle;' class='myclass'&gt;" wrap_end="&lt;/div&gt;")
 wrap_title_start,wrap_title_end - wrap_image_start,wrap_image_end - wrap_text_start,wrap_text_end. Same as wrap_start,wrap_end above.<br />
 end_size – how many numbers on either the start and the end list edges (used for pagination)<br />
 mid_size – how many numbers to either side of current page, but not including current page (used for pagination)<br />
@@ -89,7 +89,7 @@ prev_next – Whether to include the previous and next links in the list or not 
 prev – the previous page link text. Works only if prev_next argument is set to true. (Default:« Previous)<br />
 next- The next page text. Works only if prev_next argument is set to true. (Default:Next »)<br />
 page_title_style – style for the page title (default: none)<br />
-title – custom title (default: none) Example: title=#34;Joe's Favorite Bicycles#34;<br />
+title – custom title (default: none) Example: title="Joe's Favorite Bicycles"<br />
 column – number of columns (default: 1)<br />
 menu_name – name of the menu (should be created in Appearance > Menu)(default: none)<br />
 menu_class – CSS class for the menu<br />
