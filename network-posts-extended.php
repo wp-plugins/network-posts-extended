@@ -376,7 +376,7 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
                              if($full_text) $text = $the_post['post_content']; else $text = $exerpt;
                              $html .= strip_shortcodes( $text);
                              $html .= htmlspecialchars_decode($wrap_text_end);
-                            // $html .= ' <a href="'.$the_post['guid'].'">read more?</a></p>';
+                            // $html .= ' <a href="'.$the_post['guid'].'">read more&rarr;</a></p>';
                          }
 
                          $html .= "<br />";
@@ -432,7 +432,7 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
                             else $exerpt  = $the_post['post_excerpt'];
                             if($full_text) $text = $the_post['post_content']; else $text = $exerpt;
                             $html .= strip_shortcodes( $text);
-                            $html .= ' <a href="'.$the_post['guid'].'">read more?</a></p>';
+                            $html .= ' <a href="'.$the_post['guid'].'">read more&rarr;</a></p>';
                             $html .= htmlspecialchars_decode($wrap_text_end);
                         }
 
