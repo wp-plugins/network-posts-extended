@@ -64,7 +64,6 @@ To added latest features and minor bug fixes.<br />Plus ability to add custom cs
 <br /><br />
 include_post - list of posts/pages that you want to include (example: include_post="5" - include_post="5,8,153"<br />
 exclude_post - list of posts/pages that you want to exclude (example: exclude_post="5" - exclude_post="5,8,153"<br />
-title_length - Cuts off the title at X amount of characters so won't make long wrap around which look ugly. The length is in characters including spaces and symbols (Default 999)<br />
 include_blog – list of blogs, with the posts which will be displayed (default all blogs)<br />
 exclude_blog – list of excluded blogs (default none) (works only if include_blogs argument is not present)<br />
 days – how old in days the post can be (default 0' – no limit)<br />
@@ -90,7 +89,12 @@ prev – the previous page link text. Works only if prev_next argument is set to
 next- The next page text. Works only if prev_next argument is set to true. (Default:Next »)<br />
 page_title_style – style for the page title (default: none)<br />
 title – custom title (default: none) Example: title="Joe's Favorite Bicycles"<br />
+title_color - Color of the title text. Example: title_color="red" or title="color:#ff0000" both will give you a color of red. (Default black)<br />
+title_length - Cuts off the title at X amount of characters so won't make long wrap around which look ugly. The length is in characters including spaces and symbols (Default 999)<br />
 column – number of columns (default: 1)<br />
+column_width - Width of column in pixels. Example column_width="250". (Default: 200)<br />
+meta_info - Example: meta_info="false" (Default 'true')<br />
+meta_length - Example: meta_length="75%" (Default 100%)<br />
 menu_name – name of the menu (should be created in Appearance > Menu)(default: none)<br />
 menu_class – CSS class for the menu<br />
 container_class – the CSS class that is applied to the menu container<br /><br />
