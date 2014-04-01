@@ -25,7 +25,7 @@ Using the search field in the admin area type in 'network posts extended' (witho
 Upload zip file through the plugins menu
 
 
-Note: For multisite installations only. Do not Network Activate. Activate it individually on each site.
+Note: For multisite installations only. Do not Network Activate. Activate on main site only. Due to WordPress security measures for subdomains it will not work properly. We recommend using Ninja Pages, Categories, and Tags or Single Latest Posts plugins.
 
 == Frequently Asked Questions ==
 Q) Should I network activate the plugin?<br />
