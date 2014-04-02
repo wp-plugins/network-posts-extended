@@ -4,7 +4,7 @@ Tags: network global posts, network posts, global posts, multisite posts, shared
 Donate link: http://johncardell.com/plugins/network-posts-extended/
 Requires at least: 3.0
 Tested up to: 3.8.1
-Stable tag: 0.0.3
+Stable tag: 0.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,7 @@ Note: For multisite installations only. Do not Network Activate. Activate on mai
 
 == Frequently Asked Questions ==
 Q) Should I network activate the plugin?<br />
-A) No. Activate it individually on each blog.<br /><br />
+A) No. Activate it individually on main blog.<br /><br />
 Q) May I only include an x amount of posts that I choose?<br />
 A) Yes, use include_post= and put in your posts in comma separated format surrounded by double quotes.<br />Example include_post="5,78,896".<br /><br />
 Q) My title is too long and looks ugly, anyway I can shorten it?<br />
@@ -45,6 +45,10 @@ A) You may shorten it using the argument title_length="10" will rounded it off t
 screenshot-1.png,screenshot-2.png,screenshot-3.png
 
 == Changelog ==
+04/02/14<br />
+Added two more arguments.<br />
+manual_excerpt_length=<br />
+post_height=<br />
 Added the function to be able to use your own custom classes in tools area.<br />
 Plus added the following arguments:<br />
 column_width (default (px): 200)<br />
@@ -83,7 +87,9 @@ date_format – format of the post date (default n/j/Y)<br />
 wrap_start, wrap_end - you can wrap the posts for example: (wrap_start="&lt;div style='font-weight:bold;vertical-align:middle;' class='myclass'&gt;" wrap_end="&lt;/div&gt;")
 wrap_title_start,wrap_title_end - wrap_image_start,wrap_image_end - wrap_text_start,wrap_text_end. Same as wrap_start,wrap_end above.<br />
 end_size – how many numbers on either the start and the end list edges (used for pagination)<br />
+manual_excerp_length - You can set the length of the manual excerpt. For example if someone has 500 words in the manual excerpt field it may be trimmed down to 400 like so: manual_excerpt_length="400" (defaul 9999)<br />
 mid_size – how many numbers to either side of current page, but not including current page (used for pagination)<br />
+post_height - Sets the default height for all posts. Recommended for 2 column mode. For example if manual_excerpt_length="400" or excerpt_length="400" and you want posts with less of an excerpt to have same dimmensions use this feature. post_height="300" will give a standard height of 300 pixels. So if post has less characters of text will still keep square shape so titles line up nicely. <br />
 prev_next – Whether to include the previous and next links in the list or not (used for pagination. Default: true)<br />
 prev – the previous page link text. Works only if prev_next argument is set to true. (Default:« Previous)<br />
 next- The next page text. Works only if prev_next argument is set to true. (Default:Next »)<br />

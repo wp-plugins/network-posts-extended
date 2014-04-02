@@ -3,7 +3,7 @@
 Plugin Name: Network Posts Extended
 Plugin URI: http://www.johncardell.com/plugins/network-posts-extended/
 Description: Network Posts Extended plugin enables you to share posts over WP Multi Site network.  You can display on any blog in your network the posts selected by taxanomy from any blogs including main. 
-Version: 0.0.3
+Version: 0.0.4
 Author: John Cardell
 Author URI: http://www.johncardell.com
 
@@ -121,7 +121,9 @@ function netsposts_shortcode($atts)
     'meta_width' => '100%',
 	'menu_name' => '',
 	'menu_class' => '',
-	'container_class' => ''
+	'container_class' => '',
+    'post_height' => null,
+    'manual_excerpt_length' => null
 	), $atts));
 
 ########  OUTPUT STAFF  #################### 
@@ -324,6 +326,13 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
         $html .= "</style>";
 
         $html .= '<div id="block-wrapper">';
+
+        if(isset($post_height)){
+            $height_content = "height: ".$post_height."px;";
+        }else{
+            $height_content = "";
+        }
+
 		if($title) $html .= '<span class="netsposts-title">'.$title.'</span><br />';
 
 		foreach($colomn_data as  $data)
@@ -342,7 +351,7 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
                          $blog_name = $blog_details->blogname;
                          $blog_url = $blog_details->siteurl;
                          if($titles_only) $title_class = 'netsposts-post-titles-only'; else $title_class = 'netsposts-posttitle';
-                         $html .= html_entity_decode($wrap_start).'<div class="netsposts-content">';
+                         $html .= html_entity_decode($wrap_start).'<div class="netsposts-content" style="'.$height_content.'">';
                          $html .= htmlspecialchars_decode($wrap_title_start);
                          $html .= '<span class="'.$title_class.'" style="color: '.$title_color.';">'.ShortenText($the_post['post_title'],$title_length).'</span>';
                          $html .= htmlspecialchars_decode($wrap_title_end);
@@ -373,7 +382,15 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 
                              if($auto_excerpt)  {$exerpt  = get_excerpt($excerpt_length, $the_post['post_content'], $the_post['guid']);}
                              else $exerpt  = $the_post['post_excerpt'];
-                             if($full_text) $text = $the_post['post_content']; else $text = $exerpt;
+                             if($full_text){
+                                 $text = $the_post['post_content'];
+                             }else{
+                                 if($manual_excerpt_length){
+                                     $text = get_excerpt($manual_excerpt_length,$exerpt,$the_post['guid']);
+                                 }else{
+                                     $text = $exerpt;
+                                 }
+                             }
                              $html .= strip_shortcodes( $text);
                              $html .= htmlspecialchars_decode($wrap_text_end);
                             // $html .= ' <a href="'.$the_post['guid'].'">read more&rarr;</a></p>';
@@ -392,7 +409,7 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
                               $blog_url = $blog_details->siteurl;
 
                         if($titles_only) $title_class = 'netsposts-post-titles-only'; else $title_class = 'netsposts-posttitle';
-                        $html .= html_entity_decode($wrap_start).'<div class="netsposts-content">';
+                        $html .= html_entity_decode($wrap_start).'<div class="netsposts-content" style="'.$height_content.'">';
                         $html .= htmlspecialchars_decode($wrap_title_start);
                         $html .= '<span class="'.$title_class.'" style="color: '.$title_color.';">'.ShortenText($the_post['post_title'],$title_length).'</span>';
                         $html .= htmlspecialchars_decode($wrap_title_end);
@@ -430,7 +447,15 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 
                             if($auto_excerpt)  {$exerpt  = get_excerpt($excerpt_length, $the_post['post_content'], $the_post['guid']);}
                             else $exerpt  = $the_post['post_excerpt'];
-                            if($full_text) $text = $the_post['post_content']; else $text = $exerpt;
+                            if($full_text){
+                                $text = $the_post['post_content'];
+                            }else{
+                                if($manual_excerpt_length){
+                                    $text = get_excerpt($manual_excerpt_length,$exerpt,$the_post['guid']);
+                                }else{
+                                    $text = $exerpt;
+                                }
+                            }
                             $html .= strip_shortcodes( $text);
                             $html .= ' <a href="'.$the_post['guid'].'">read more&rarr;</a></p>';
                             $html .= htmlspecialchars_decode($wrap_text_end);
