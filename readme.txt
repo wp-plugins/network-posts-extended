@@ -4,7 +4,7 @@ Tags: network global posts, network posts, global posts, multisite posts, shared
 Donate link: http://johncardell.com/plugins/network-posts-extended/
 Requires at least: 3.0
 Tested up to: 3.8.3
-Stable tag: 0.0.5
+Stable tag: 0.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,6 +45,7 @@ A) You may shorten it using the argument title_length="10" will rounded it off t
 screenshot-1.png,screenshot-2.png,screenshot-3.png
 
 == Changelog ==
+Fixed call to function error<br />
 04/02/14<br />
 Added two more arguments.<br />
 manual_excerpt_length=<br />
@@ -59,7 +60,6 @@ wrap_title_start,wrap_title_end - wrap_image_start,wrap_image_end - wrap_text_st
 meta_width - Same as title length except in percentage to shorten long meta data.<br />
 
 == Upgrade Notice ==
-Fixed bug in two column mode when used with include_post=
 To added latest features and minor bug fixes.<br />Plus ability to add custom css styling in plugins tool page.<br />May now create this custom class: .example { color: #000; float:left; }
 
 == List of Arguments ==

@@ -3,7 +3,7 @@
 Plugin Name: Network Posts Extended
 Plugin URI: http://www.johncardell.com/plugins/network-posts-extended/
 Description: Network Posts Extended plugin enables you to share posts over WP Multi Site network.  You can display on any blog in your network the posts selected by taxanomy from any blogs including main. 
-Version: 0.0.5
+Version: 0.0.6
 Author: John Cardell
 Author URI: http://www.johncardell.com
 
@@ -20,7 +20,34 @@ add_shortcode('netsposts','netsposts_shortcode');
 add_action('admin_menu', 'add_netsposts_toolpage');
 
 // Setup functions
+function super_unique($array,$key)
+{
 
+	$temp_array = array();
+
+	foreach ($array as &$v) {
+
+		if (!isset($temp_array[$v[$key]]))
+
+			$temp_array[$v[$key]] =& $v;
+
+	}
+
+	$array = array_values($temp_array);
+
+	return $array;
+
+}
+
+function removeElementWithValue($array, $key, $value){
+	foreach($array as $subKey => $subArray){
+		if($subArray[$key] == $value){
+			unset($array[$subKey]);
+		}
+	}
+	return $array;
+}
+		
 function ShortenText($text, $limit)
 
 {
@@ -259,38 +286,7 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 		if(!$page)  $page = get_query_var('page');
 		if(!$page)  $page = 1;
 
-        function super_unique($array,$key)
-
-        {
-
-            $temp_array = array();
-
-            foreach ($array as &$v) {
-
-                if (!isset($temp_array[$v[$key]]))
-
-                    $temp_array[$v[$key]] =& $v;
-
-            }
-
-            $array = array_values($temp_array);
-
-            return $array;
-
-
-
-        }
-
         $postdata = super_unique($postdata,"ID");
-
-        function removeElementWithValue($array, $key, $value){
-            foreach($array as $subKey => $subArray){
-                if($subArray[$key] == $value){
-                    unset($array[$subKey]);
-                }
-            }
-            return $array;
-        }
 
         $exclude_post2 = explode(",",$exclude_post);
 
