@@ -29,7 +29,8 @@ Note: For multisite installations only. Do not Network Activate. Activate on mai
 
 == Frequently Asked Questions ==
 Q) Should I network activate the plugin?<br />
-A) No. Activate on main blog.<br /><br />
+A) No. Activate on main blog and each subdomain individually.<br />
+Note: Custom CSS code will not work on subdomain unless user has Super Admin privelidges. Please submit code to administrator for him to add if building your site on a multisite network.<br /><br />
 Q) May I only include an x amount of posts that I choose?<br />
 A) Yes, use include_post= and put in your posts in comma separated format surrounded by double quotes.<br />Example include_post="5,78,896".<br /><br />
 Q) My title is too long and looks ugly, anyway I can shorten it?<br />
