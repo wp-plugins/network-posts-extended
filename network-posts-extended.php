@@ -3,7 +3,7 @@
 Plugin Name: Network Posts Extended
 Plugin URI: http://www.johncardell.com/plugins/network-posts-extended/
 Description: Network Posts Extended plugin enables you to share posts over WP Multi Site network.  You can display on any blog in your network the posts selected by taxanomy from any blogs including main. 
-Version: 0.0.4
+Version: 0.0.5
 Author: John Cardell
 Author URI: http://www.johncardell.com
 
@@ -228,6 +228,24 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 		}
 		}  
 	usort($postdata, "custom_sort");
+		
+	if(isset($include_post)){
+	
+		$include_post2 = explode(",",$include_post);
+
+		foreach($postdata as $postX){
+		
+			if(in_array($postX['ID'], $include_post2)){
+			
+				$newPostdata[] = $postX;
+			}
+			
+		}
+		
+		$postdata = $newPostdata;
+	 
+	}
+	
 	if($paginate)
 	{
 		if($column > 1)
@@ -342,67 +360,6 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 
 			foreach($data as $key => $the_post)
 			{
-                $include_post2 = explode(",",$include_post);
-
-                 if(isset($include_post)){
-
-                     if(in_array($the_post['ID'], $include_post2)){
-                         $blog_details = get_blog_details( $the_post['blog_id']);
-                         $blog_name = $blog_details->blogname;
-                         $blog_url = $blog_details->siteurl;
-                         if($titles_only) $title_class = 'netsposts-post-titles-only'; else $title_class = 'netsposts-posttitle';
-                         $html .= html_entity_decode($wrap_start).'<div class="netsposts-content" style="'.$height_content.'">';
-                         $html .= htmlspecialchars_decode($wrap_title_start);
-                         $html .= '<span class="'.$title_class.'" style="color: '.$title_color.';">'.ShortenText($the_post['post_title'],$title_length).'</span>';
-                         $html .= htmlspecialchars_decode($wrap_title_end);
-
-                         if(!$titles_only)
-                         {
-                             $date = new DateTime(trim($the_post['post_date']));
-                             $date_post = $date->format($date_format);
-                             if($meta_info != "false"){
-                                $html .= '<span class="netsposts-source"> '.__('Published','netsposts').' '.$date_post.' '.__('in','netsposts').'  <a href="'.$blog_url.'">'.$blog_name.'</a>';
-                             }
-                             ##  Full metadata
-                             if( $show_author)
-                             {
-                                 if($column > 1) $html .= '<br />';
-                                 $html .= ' ' . __('Author','netsposts'). ' ' . '<a href="'.$blog_url .'?author='.  $the_post['post_author'] .'">'. get_the_author_meta( 'display_name' , $the_post['post_author'] ) . ' </a>';
-                             }
-                             $html .= '</span>';
-                             if($thumbnail)
-                             {
-                                 $html .= htmlspecialchars_decode($wrap_image_start);
-                                 $html .= '<a href="'.$the_post['guid'].'">'.get_thumbnail_by_blog($the_post['blog_id'],$the_post['ID'],$size, $image_class, $column).'</a>';
-                                 $html .= htmlspecialchars_decode($wrap_image_end);
-                                 $html .= '<p class="netsposts-excerpt" style="color: '.$text_color.';">';
-                                 $html .= htmlspecialchars_decode($wrap_text_start);
-                                 $the_post['post_content'] = preg_replace("/<img[^>]+\>/i", "", $the_post['post_content']);
-                             }
-
-                             if($auto_excerpt)  {$exerpt  = get_excerpt($excerpt_length, $the_post['post_content'], $the_post['guid']);}
-                             else $exerpt  = $the_post['post_excerpt'];
-                             if($full_text){
-                                 $text = $the_post['post_content'];
-                             }else{
-                                 if($manual_excerpt_length){
-                                     $text = get_excerpt($manual_excerpt_length,$exerpt,$the_post['guid']);
-                                 }else{
-                                     $text = $exerpt;
-                                 }
-                             }
-                             $html .= strip_shortcodes( $text);
-                             $html .= htmlspecialchars_decode($wrap_text_end);
-                            // $html .= ' <a href="'.$the_post['guid'].'">read more&rarr;</a></p>';
-                         }
-
-                         $html .= "<br />";
-
-                         $html .= html_entity_decode($wrap_end);
-
-                     }
-
-                 }else{
 
                         $blog_details = get_blog_details( $the_post['blog_id']);
                               $blog_name = $blog_details->blogname;
@@ -465,8 +422,6 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
                         $html .= "<br />";
 
                         $html .= html_entity_decode($wrap_end);
-
-                 }
 
                  $html .= "<div style='clear: both;'></div>";
 
