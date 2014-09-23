@@ -1,10 +1,10 @@
-=== Network Posts Extended ===
+﻿=== Network Posts Extended ===
 Contributors: johnzenausa, DJManas
 Tags: network global posts, network posts, global posts, multisite posts, shared posts, network posts extended
 Donate link: http://johncardell.com/plugins/network-posts-extended/
 Requires at least: 3.0
-Tested up to: 3.8.3
-Stable tag: 0.0.6
+Tested up to: 4.0
+Stable tag: 0.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,11 +30,13 @@ Note: For multisite installations only. Do not Network Activate. Activate on mai
 == Frequently Asked Questions ==
 Q) Should I network activate the plugin?<br />
 A) No. Activate on main blog and each subdomain individually.<br />
-Note: Custom CSS code will not work on subdomain unless user has Super Admin privelidges. Please submit code to administrator for him to add if building your site on a multisite network.<br /><br />
+Note: Custom CSS code will not work on subdomain unless user has Super Admin privelidges. I recommend you use the WP Custom CSS Plugin by Tips and Tricks<br /><br />
 Q) May I only include an x amount of posts that I choose?<br />
 A) Yes, use include_post= and put in your posts in comma separated format surrounded by double quotes.<br />Example include_post="5,78,896".<br /><br />
 Q) My title is too long and looks ugly, anyway I can shorten it?<br />
 A) You may shorten it using the argument title_length="10" will rounded it off to the last complete word before it reaches 10 characters.<br /><br />
+Q) I would like to just show an X amount of random posts on the home page. Is it possible?
+A) Use the following arguments: random=true and list=10 will show ten different posts randomly whenever the page is loaded.<br /><br />
 
 
 == Screenshots ==
@@ -59,9 +61,13 @@ text_color - color of text. Examples text_color="red" or text_color="#ff0000". B
 meta_info - Default true<br />
 wrap_title_start,wrap_title_end - wrap_image_start,wrap_image_end - wrap_text_start,wrap_text_end.<br />
 meta_width - Same as title length except in percentage to shorten long meta data.<br />
+Added the ability to show posts or pages randomly using the following argument: random="true"<br />
+The list= argument works with pagination= true or false (default: false)<br />
 
 == Upgrade Notice ==
-To added latest features and minor bug fixes.<br />Plus ability to add custom css styling in plugins tool page.<br />May now create this custom class: .example { color: #000; float:left; }
+To added latest features and minor bug fixes.<br />Plus ability to add custom css styling in plugins tool page.<br />May now create this custom class: .example { color: #000; float:left; }<br />
+Added the ability to show random posts or pages.<br />
+list= now works with pagination= set to true or false.<br />
 
 == List of Arguments ==
 /* Network Posts Extended Shortcodes and Arguments */
@@ -91,11 +97,12 @@ wrap_title_start,wrap_title_end - wrap_image_start,wrap_image_end - wrap_text_st
 end_size – how many numbers on either the start and the end list edges (used for pagination)<br />
 manual_excerp_length - You can set the length of the manual excerpt. For example if someone has 500 words in the manual excerpt field it may be trimmed down to 400 like so: manual_excerpt_length="400" (defaul 9999)<br />
 mid_size – how many numbers to either side of current page, but not including current page (used for pagination)<br />
+page_title_style – style for the page title (default: none)<br />
 post_height - Sets the default height for all posts. Recommended for 2 column mode. For example if manual_excerpt_length="400" or excerpt_length="400" and you want posts with less of an excerpt to have same dimmensions use this feature. post_height="300" will give a standard height of 300 pixels. So if post has less characters of text will still keep square shape so titles line up nicely. <br />
 prev_next – Whether to include the previous and next links in the list or not (used for pagination. Default: true)<br />
 prev – the previous page link text. Works only if prev_next argument is set to true. (Default:« Previous)<br />
-next- The next page text. Works only if prev_next argument is set to true. (Default:Next »)<br />
-page_title_style – style for the page title (default: none)<br />
+next - The next page text. Works only if prev_next argument is set to true. (Default:Next »)<br />
+random - Set to true to show posts randomly. (Default: set to false)<br />
 title – custom title (default: none) Example: title="Joe's Favorite Bicycles"<br />
 title_color - Color of the title text. Example: title_color="red" or title="color:#ff0000" both will give you a color of red. (Default black)<br />
 title_length - Cuts off the title at X amount of characters so won't make long wrap around which look ugly. The length is in characters including spaces and symbols (Default 999)<br />

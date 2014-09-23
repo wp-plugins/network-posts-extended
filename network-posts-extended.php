@@ -25,11 +25,11 @@ function super_unique($array,$key)
 
 	$temp_array = array();
 
-	foreach ($array as &$v) {
-
+	foreach ($array as $v) {
+		
 		if (!isset($temp_array[$v[$key]]))
 
-			$temp_array[$v[$key]] =& $v;
+			$temp_array[$v[$key]] = $v;
 
 	}
 
@@ -103,6 +103,7 @@ function net_shared_posts_uninstall()
 
 function netsposts_shortcode($atts)
 {
+	/* below is my updates */ 
 	extract(shortcode_atts(array(
 	'limit' => '',
 	'days' => 0,
@@ -150,8 +151,10 @@ function netsposts_shortcode($atts)
 	'menu_class' => '',
 	'container_class' => '',
     'post_height' => null,
-    'manual_excerpt_length' => null
+    'manual_excerpt_length' => null,
+	'random' => false
 	), $atts));
+	/* my updates are finished here */
 
 ########  OUTPUT STAFF  #################### 
 $titles_only = strtolower($titles_only) == 'true'? true: false;
@@ -161,6 +164,12 @@ $auto_excerpt = strtolower($auto_excerpt) == 'true'? true: false;
 $show_author = strtolower($show_author) == 'true'? true: false;
 $full_text = strtolower($full_text) == 'true'? true: false;
 $prev_next = strtolower($prev_next) == 'true'? true: false;
+
+/* below is my updates */ 
+$random = strtolower($random) == 'true'? true: false;
+/* my updates are finished here */
+
+
 	global $wpdb;
 	global $table_prefix;
         if($limit) $limit = " LIMIT 0,$limit ";
@@ -184,11 +193,35 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 	$include .= ")";
 	} else {  if($exclude_blog)   {$exclude_arr = explode(",",$exclude_blog); foreach($exclude_arr as $exclude_blog)	{$exclude .= "AND blog_id != $exclude_blog  "; }}}
 	$BlogsTable = $wpdb->base_prefix.'blogs';
-	$blogs = $wpdb->get_col($wpdb->prepare(
 
-    "SELECT blog_id FROM $BlogsTable WHERE public = %d AND archived = %d AND mature = %d AND spam = %d AND deleted = %d $include $exclude", 1, 0, 0, 0, 0
+	/* below is my updates */ 
+	if($random){
+		$page = get_query_var('paged');
+		if(!$page)  $page = get_query_var('page');
+		if(!$page)  $page = 1;
+		if($page > 1 && $paginate ){
+			$blogs = $wpdb->get_col($wpdb->prepare(
 
-    ));
+			"SELECT blog_id FROM $BlogsTable WHERE public = %d AND archived = %d AND mature = %d AND spam = %d AND deleted = %d $include $exclude  ", 1, 0, 0, 0, 0
+
+			));
+		}
+			else{
+			$blogs = $wpdb->get_col($wpdb->prepare(
+
+			"SELECT blog_id FROM $BlogsTable WHERE public = %d AND archived = %d AND mature = %d AND spam = %d AND deleted = %d $include $exclude ORDER BY RAND() ", 1, 0, 0, 0, 0
+
+			));
+		}
+	}
+	else{
+		$blogs = $wpdb->get_col($wpdb->prepare(
+
+		"SELECT blog_id FROM $BlogsTable WHERE public = %d AND archived = %d AND mature = %d AND spam = %d AND deleted = %d $include $exclude  ", 1, 0, 0, 0, 0
+
+		));
+	}
+	/* my updates are finished here */
 
 	## Getting posts
 	$postdata = array();
@@ -245,16 +278,45 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
  
 			if ($ids) {  $ids = ' AND  ('. substr($ids,0,strlen($ids)-2).')'; }  else { if($taxonomy) $ids = ' AND  ID=null';}
 			
-			$the_post = $wpdb->get_results( $wpdb->prepare(
-                "SELECT $PostsTable.ID, $PostsTable.post_title, $PostsTable.post_excerpt, $PostsTable.post_content, $PostsTable.post_author, $PostsTable.post_date, $PostsTable.guid, $BlogsTable.blog_id
-                FROM $PostsTable, $BlogsTable WHERE $BlogsTable.blog_id  =  $blog_id  AND $PostsTable.post_status = %s $ids  AND $PostsTable.post_type = '$post_type'  $old  $limit"
-                , 'publish'
-            ), ARRAY_A);
+
+			
+			/* below is my updates */ 
+			if($random){
+				if($page > 1 && $paginate ){
+					$the_post = $wpdb->get_results( $wpdb->prepare(
+						"SELECT $PostsTable.ID, $PostsTable.post_title, $PostsTable.post_excerpt, $PostsTable.post_content, $PostsTable.post_author, $PostsTable.post_date, $PostsTable.guid, $BlogsTable.blog_id
+						FROM $PostsTable, $BlogsTable WHERE $BlogsTable.blog_id  =  $blog_id  AND $PostsTable.post_status = %s $ids  AND $PostsTable.post_type = '$post_type'  $old  $limit"
+						, 'publish'
+					), ARRAY_A);
+				}
+				else{
+					$the_post = $wpdb->get_results( $wpdb->prepare(
+						"SELECT $PostsTable.ID, $PostsTable.post_title, $PostsTable.post_excerpt, $PostsTable.post_content, $PostsTable.post_author, $PostsTable.post_date, $PostsTable.guid, $BlogsTable.blog_id
+						FROM $PostsTable, $BlogsTable WHERE $BlogsTable.blog_id  =  $blog_id  AND $PostsTable.post_status = %s $ids  AND $PostsTable.post_type = '$post_type'  $old ORDER BY RAND() $limit"
+						, 'publish'
+					), ARRAY_A);
+				}
+			}
+			else{
+				$the_post = $wpdb->get_results( $wpdb->prepare(
+					"SELECT $PostsTable.ID, $PostsTable.post_title, $PostsTable.post_excerpt, $PostsTable.post_content, $PostsTable.post_author, $PostsTable.post_date, $PostsTable.guid, $BlogsTable.blog_id
+					FROM $PostsTable, $BlogsTable WHERE $BlogsTable.blog_id  =  $blog_id  AND $PostsTable.post_status = %s $ids  AND $PostsTable.post_type = '$post_type'  $old  $limit"
+					, 'publish'
+				), ARRAY_A);
+
+			}
+			/* my updates are finished here */
+
 			$postdata = array_merge_recursive($postdata, $the_post);
 			$ids='';
 		}
-		}  
-	usort($postdata, "custom_sort");
+		} 
+		
+	/* below is my updates */
+	if(!$random){
+		usort($postdata, "custom_sort");
+	}
+	/* my updates are finished here */
 		
 	if(isset($include_post)){
 	
@@ -273,6 +335,7 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 	 
 	}
 	
+
 	if($paginate)
 	{
 		if($column > 1)
@@ -286,7 +349,11 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
 		if(!$page)  $page = get_query_var('page');
 		if(!$page)  $page = 1;
 
-        $postdata = super_unique($postdata,"ID");
+		/* below is my updates */ 
+        //$postdata = super_unique($postdata,"ID");
+		/* my updates are finished here */
+		
+		
 
         $exclude_post2 = explode(",",$exclude_post);
 
@@ -295,13 +362,21 @@ $prev_next = strtolower($prev_next) == 'true'? true: false;
             $postdata = removeElementWithValue($postdata, "ID", $row);
 
         }
-
+		
+		
         //if(!in_array($the_post['ID'], $exclude_post2)){
-
+			
+		
 		$total_records = count($postdata);
 		$total_pages = ceil($total_records/$list);
 		$postdata = array_slice($postdata, ($page-1)*$list, $list);
+		
 	} 
+	/* below is my updates */ 
+	else{
+		$postdata = array_slice($postdata, 0, $list);
+	}
+	/* my updates are finished here */
 	if($column > 1)
 	{        $count = count($postdata);
 	         if(!$paginate) $column_list = ceil($count/$column);
