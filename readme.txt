@@ -95,7 +95,7 @@ date_format – format of the post date (default n/j/Y)<br />
 wrap_start, wrap_end - you can wrap the posts for example: (wrap_start="&lt;div style='font-weight:bold;vertical-align:middle;' class='myclass'&gt;" wrap_end="&lt;/div&gt;")
 wrap_title_start,wrap_title_end - wrap_image_start,wrap_image_end - wrap_text_start,wrap_text_end. Same as wrap_start,wrap_end above.<br />
 end_size – how many numbers on either the start and the end list edges (used for pagination)<br />
-manual_excerp_length - You can set the length of the manual excerpt. For example if someone has 500 words in the manual excerpt field it may be trimmed down to 400 like so: manual_excerpt_length="400" (defaul 9999)<br />
+manual_excerpt_length - You can set the length of the manual excerpt. For example if someone has 500 words in the manual excerpt field it may be trimmed down to 400 like so: manual_excerpt_length="400" (defaul 9999)<br />
 mid_size – how many numbers to either side of current page, but not including current page (used for pagination)<br />
 page_title_style – style for the page title (default: none)<br />
 post_height - Sets the default height for all posts. Recommended for 2 column mode. For example if manual_excerpt_length="400" or excerpt_length="400" and you want posts with less of an excerpt to have same dimmensions use this feature. post_height="300" will give a standard height of 300 pixels. So if post has less characters of text will still keep square shape so titles line up nicely. <br />
