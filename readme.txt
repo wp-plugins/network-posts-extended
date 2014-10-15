@@ -38,7 +38,7 @@ A) You may shorten it using the argument title_length="10" will rounded it off t
 Q) I would like to just show an X amount of random posts on the home page. Is it possible?
 A) Use the following arguments: random=true and list=10 will show ten different posts randomly whenever the page is loaded.<br />
 Q) May I order my posts in specific order by date or title?<br />
-A) Yes you may give specific ordering of your posts via Alphabetical order (by title), by date or page specific order (when post_type=page is selected).<br /><br />
+A) Yes you may give specific ordering of your posts or pages via alphabetical order (by title), by date or page specific order (when post_type=page) is selected.<br /><br />
 
 
 == Screenshots ==
