@@ -2,8 +2,8 @@
 /*
 Plugin Name: Network Posts Extended
 Plugin URI: http://www.johncardell.com/plugins/network-posts-extended/
-Description: Network Posts Extended plugin enables you to share posts over WP Multi Site network.  You can display on any blog in your network the posts selected by taxanomy from any blogs including main. 
-Version: 0.0.8
+Description: Network Posts Extended plugin enables you to share posts over WP Multi Site network.  You can display on any blog in your network the posts selected by taxonomy from any blogs including main. 
+Version: 0.0.9
 Author: John Cardell
 Author URI: http://www.johncardell.com
 
@@ -18,6 +18,8 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME']))
 add_action("plugins_loaded","net_shared_posts_init");
 add_shortcode('netsposts','netsposts_shortcode');
 add_action('admin_menu', 'add_netsposts_toolpage');
+
+
 
 // Setup functions
 function super_unique($array,$key)
@@ -152,7 +154,9 @@ function netsposts_shortcode($atts)
 	'container_class' => '',
     'post_height' => null,
     'manual_excerpt_length' => null,
-	'random' => false
+	'random' => false,
+    'order_post_by' => '',
+	
 	), $atts));
 	/* my updates are finished here */
 
@@ -172,6 +176,7 @@ $random = strtolower($random) == 'true'? true: false;
 
 	global $wpdb;
 	global $table_prefix;
+	
         if($limit) $limit = " LIMIT 0,$limit ";
 	## Params for taxonomy
 	if($cat)
@@ -277,10 +282,39 @@ $random = strtolower($random) == 'true'? true: false;
 			}
  
 			if ($ids) {  $ids = ' AND  ('. substr($ids,0,strlen($ids)-2).')'; }  else { if($taxonomy) $ids = ' AND  ID=null';}
+
+
+
+			/* below is my updates */ 
+
+			
+			$order_by = "";
+			$aorder = array(); 
+			$aorder1 = array(); 
+			if($order_post_by){
+				$tab_order_by1 = explode(" ", $order_post_by);
+				if(($tab_order_by1[0] == "page_order" || $tab_order_by1[0] == "alphabetical_order" || $tab_order_by1[0] == "date_order") && (trim($tab_order_by1[1]) == "" || strtoupper($tab_order_by1[1]) == "DESC" || strtoupper($tab_order_by1[1]) == "ASC")){
+					$order_by .= " ORDER BY ".$PostsTable.".".$order_post_by;
+					$ordad = ($tab_order_by1[1]) ? $tab_order_by1[1] : "ASC";
+					$aorder = array_merge($aorder,array($tab_order_by1[0] => $ordad));
+					
+					$ordad0 = "ID";
+					if($tab_order_by1[0] == "date_order" )
+						$ordad0 = "post_date";
+					else if($tab_order_by1[0] == "alphabetical_order" )
+						$ordad0 = "post_title";
+					if(strtoupper($tab_order_by1[1]) == "DESC")
+						$ordad1 = SORT_DESC;
+					else
+						$ordad1 = SORT_ASC;
+					$aorder1 = array_merge($aorder1,array($ordad0 => $ordad1));
+				}
+			}
+			
 			
 
 			
-			/* below is my updates */ 
+			
 			if($random){
 				if($page > 1 && $paginate ){
 					$the_post = $wpdb->get_results( $wpdb->prepare(
@@ -300,9 +334,11 @@ $random = strtolower($random) == 'true'? true: false;
 			else{
 				$the_post = $wpdb->get_results( $wpdb->prepare(
 					"SELECT $PostsTable.ID, $PostsTable.post_title, $PostsTable.post_excerpt, $PostsTable.post_content, $PostsTable.post_author, $PostsTable.post_date, $PostsTable.guid, $BlogsTable.blog_id
-					FROM $PostsTable, $BlogsTable WHERE $BlogsTable.blog_id  =  $blog_id  AND $PostsTable.post_status = %s $ids  AND $PostsTable.post_type = '$post_type'  $old  $limit"
+					FROM $PostsTable, $BlogsTable WHERE $BlogsTable.blog_id  =  $blog_id  AND $PostsTable.post_status = %s $ids  AND $PostsTable.post_type = '$post_type'  $old    $limit"
 					, 'publish'
 				), ARRAY_A);
+
+				
 
 			}
 			/* my updates are finished here */
@@ -313,8 +349,13 @@ $random = strtolower($random) == 'true'? true: false;
 		} 
 		
 	/* below is my updates */
-	if(!$random){
-		usort($postdata, "custom_sort");
+	if(!$random ){
+		if($order_by == "")
+			usort($postdata, "custom_sort");
+		else{
+			
+			$postdata = array_msort($postdata, $aorder1);
+		}
 	}
 	/* my updates are finished here */
 
@@ -576,6 +617,35 @@ function custom_sort($a,$b)
 	return $a['post_date']<$b['post_date'];
 }
 
+/* below is my updates */
+
+function array_msort($array, $cols)
+{
+    $colarr = array();
+    foreach ($cols as $col => $order) {
+        $colarr[$col] = array();
+        foreach ($array as $k => $row) { $colarr[$col]['_'.$k] = strtolower($row[$col]); }
+    }
+    $eval = 'array_multisort(';
+    foreach ($cols as $col => $order) {
+        $eval .= '$colarr[\''.$col.'\'],'.$order.',';
+    }
+    $eval = substr($eval,0,-1).');';
+    eval($eval);
+    $ret = array();
+    foreach ($colarr as $col => $arr) {
+        foreach ($arr as $k => $v) {
+            $k = substr($k,1);
+            if (!isset($ret[$k])) $ret[$k] = $array[$k];
+            $ret[$k][$col] = $array[$k][$col];
+        }
+    }
+    return $ret;
+
+}
+
+/* my updates are finished here */
+
 ###################  TOOL PAGE  #########################
 
 function netsposts_tool_page()
@@ -602,6 +672,7 @@ function netsposts_tool_page()
 
     <?php
      echo "Here is the link: For a complete tutorial please visit: <br> <a target='ejecsingle' href='http://www.johncardell.com/plugins/network-posts-extended/'>http://www.johncardell.com/plugins/network-posts-extended/</a>";
+	 echo "Need professional help for your blog? Try Freelancer: <br> <a target='ejejcsingle' href='https://www.freelancer.com/affiliates/johnzena/'><img src='https://cdn2.f-cdn.com/static/img/affiliates/freelancer-banner-468x60-2.gif?v=ba4705d77a4a59d0234ecec6a58593c6&m=2' width=468 height=60 alt='Freelance Jobs' border=0></a>";
     ?>
     </br></br>
     <form method="post" action="options.php">

@@ -1,10 +1,10 @@
 ﻿=== Network Posts Extended ===
-Contributors: johnzenausa, DJManas
+Contributors: johnzenausa
 Tags: network global posts, network posts, global posts, multisite posts, shared posts, network posts extended
 Donate link: http://johncardell.com/plugins/network-posts-extended/
 Requires at least: 3.0
 Tested up to: 4.0
-Stable tag: 0.0.8
+Stable tag: 0.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,7 +36,9 @@ A) Yes, use include_post= and put in your posts in comma separated format surrou
 Q) My title is too long and looks ugly, anyway I can shorten it?<br />
 A) You may shorten it using the argument title_length="10" will rounded it off to the last complete word before it reaches 10 characters.<br /><br />
 Q) I would like to just show an X amount of random posts on the home page. Is it possible?
-A) Use the following arguments: random=true and list=10 will show ten different posts randomly whenever the page is loaded.<br /><br />
+A) Use the following arguments: random=true and list=10 will show ten different posts randomly whenever the page is loaded.<br />
+Q) May I order my posts in specific order by date or title?<br />
+A) Yes you may give specific ordering of your posts via Alphabetical order (by title), by date or page specific order (when post_type=page is selected).<br /><br />
 
 
 == Screenshots ==
@@ -47,7 +49,9 @@ A) Use the following arguments: random=true and list=10 will show ten different 
 </ol>
 screenshot-1.png,screenshot-2.png,screenshot-3.png
 
-== Changelog ==Arguments now work with paginate=false random=true<br />
+== Changelog ==
+Added ability to list posts in specific order by date, title or page (pertains to post_type=page only).
+Arguments now work with paginate=false random=true<br />
 Fixed call to function error<br />
 04/02/14<br />
 Added two more arguments.<br />
@@ -64,7 +68,8 @@ meta_width - Same as title length except in percentage to shorten long meta data
 Added the ability to show posts or pages randomly using the following argument: random="true"<br />
 The list= argument works with pagination= true or false (default: false)<br />
 
-== Upgrade Notice ==
+== Upgrade Notice ==
+You now may be able to list your page in specific order by date, title (alphabetical) or page.
 Random= works with paginate=false or paginate=true<br />Added latest features and minor bug fixes.<br />Plus ability to add custom css styling in plugins tool page.<br />May now create this custom class: .example { color: #000; float:left; }<br />
 Added the ability to show random posts or pages.<br />
 list= now works with pagination= set to true or false.<br />
@@ -96,7 +101,8 @@ wrap_start, wrap_end - you can wrap the posts for example: (wrap_start="&lt;div 
 wrap_title_start,wrap_title_end - wrap_image_start,wrap_image_end - wrap_text_start,wrap_text_end. Same as wrap_start,wrap_end above.<br />
 end_size – how many numbers on either the start and the end list edges (used for pagination)<br />
 manual_excerp_length - You can set the length of the manual excerpt. For example if someone has 500 words in the manual excerpt field it may be trimmed down to 400 like so: manual_excerpt_length="400" (defaul 9999)<br />
-mid_size – how many numbers to either side of current page, but not including current page (used for pagination)<br />
+mid_size – how many numbers to either side of current page, but not including current page (used for pagination)<br />
+order_by - Sort in ascending (default value) and descending order via the following arguments - Ascending: order_post_by='alphabetical_order' order_post_by='date_order' order_post_by='page_order' and descending: order_post_by='alphabetical_order desc' order_post_by='date_order desc' order_post_by='page_order desc' (note: descending must be surrounded by single or double quotes because of the empty space after page_order<br />
 page_title_style – style for the page title (default: none)<br />
 post_height - Sets the default height for all posts. Recommended for 2 column mode. For example if manual_excerpt_length="400" or excerpt_length="400" and you want posts with less of an excerpt to have same dimmensions use this feature. post_height="300" will give a standard height of 300 pixels. So if post has less characters of text will still keep square shape so titles line up nicely. <br />
 prev_next – Whether to include the previous and next links in the list or not (used for pagination. Default: true)<br />
