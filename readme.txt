@@ -49,8 +49,8 @@ A) Yes you may give specific ordering of your posts or pages via alphabetical or
 </ol>
 screenshot-1.png,screenshot-2.png,screenshot-3.png
 
-== Changelog ==
-Added ability to list posts in specific order by date, title or page (pertains to post_type=page only).
+== Changelog ==0.1.0 - Correct the php error on line 453 (changed opening php tag from <? to <?php) that some people were getting.<br />A big thanks goes out to WP member bloooooop for correcting this error.<br />
+0.0.9 - Added ability to list posts in specific order by date, title or page (pertains to post_type=page only).<br />
 Arguments now work with paginate=false random=true<br />
 Fixed call to function error<br />
 04/02/14<br />
