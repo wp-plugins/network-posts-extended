@@ -121,3 +121,10 @@
 
     margin: 2px;
 }
+a.netsposts-read-more-link {
+    color: #0000ff;
+}
+
+a.netsposts-read-more-link:hover {
+    color: ff0000; 
+}

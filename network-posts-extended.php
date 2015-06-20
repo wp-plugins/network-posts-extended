@@ -3,7 +3,7 @@
 Plugin Name: Network Posts Extended
 Plugin URI: http://www.johncardell.com/plugins/network-posts-extended/
 Description: Network Posts Extended plugin enables you to share posts over WP Multi Site network.  You can display on any blog in your network the posts selected by taxonomy from any blogs including main. 
-Version: 0.1.1
+Version: 0.1.2
 Author: John Cardell
 Author URI: http://www.johncardell.com
 
@@ -536,7 +536,7 @@ $random = strtolower($random) == 'true'? true: false;
                                 }
                             }
                             $html .= strip_shortcodes( $text);
-                            $html .= ' <a href="'.$the_post['guid'].'">read more&rarr;</a></p>';
+                            $html .= ' <a class="netsposts-read-more-link" href="'.$the_post['guid'].'">read more&rarr;</a></p>';
                             $html .= htmlspecialchars_decode($wrap_text_end);
                         }
 
@@ -671,8 +671,9 @@ function netsposts_tool_page()
     </br></br>
 
     <?php
-     echo "Here is the link: For a complete tutorial please visit: <br> <a target='ejecsingle' href='http://www.johncardell.com/plugins/network-posts-extended/'>http://www.johncardell.com/plugins/network-posts-extended/</a>";
-	 echo "Need professional help for your blog? Try Freelancer: <br> <a target='ejejcsingle' href='https://www.freelancer.com/affiliates/johnzena/'><img src='https://cdn2.f-cdn.com/static/img/affiliates/freelancer-banner-468x60-2.gif?v=ba4705d77a4a59d0234ecec6a58593c6&m=2' width=468 height=60 alt='Freelance Jobs' border=0></a>";
+     echo "Here is the link: For a complete tutorial please visit: <br> <a target='ejecsingle' href='http://www.johncardell.com/plugins/network-posts-extended/'>http://www.johncardell.com/plugins/network-posts-extended/</a><br />";
+	 echo "Need professional help for your blog? Try Freelancer: <br> <a target='ejejcsingle' href='https://www.freelancer.com/affiliates/johnzena/'><img src='https://cdn2.f-cdn.com/static/img/affiliates/freelancer-banner-468x60-2.gif?v=ba4705d77a4a59d0234ecec6a58593c6&m=2' width=468 height=60 alt='Freelance Jobs' border=0></a><br />";
+	 echo "To remove the read more&rarr; links from the excerpts put the following code in the text box below:<br />a.netsposts-read-more-link { visibility: hidden; }<br />"
     ?>
     </br></br>
     <form method="post" action="options.php">
